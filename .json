@@ -1,0 +1,30 @@
+{
+  "image":"11notes/radarr",
+  "name":"radarr",
+  "root":"/radarr",
+
+  "build":{
+    "args":{
+      "version_build":"9896"
+    }
+  },
+  
+  "semver":{
+    "version":"5.22.4",
+    "stable":"5.22.4",
+    "latest":"5.22.4"
+  },
+
+  "readme":{
+    "description":"Run Radarr smaller, lightweight and more secure",
+    "parent":{
+      "image":"11notes/alpine:stable"
+    },
+    "built":{
+      "radarr":"https://github.com/Radarr/Radarr"
+    },
+    "comparison":{
+      "image":"linuxserver/radarr:5.22.4"
+    }
+  }
+}

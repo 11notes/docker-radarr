@@ -1,0 +1,22 @@
+name: "arrs"
+services:
+  radarr:
+    image: "11notes/radarr:5.22.4"
+    read_only: true
+    environment:
+      TZ: "Europe/Zurich"
+    volumes:
+      - "radarr.var:/radarr/var"
+    tmpfs:
+      - "/tmp:uid=1000,gid=1000" # required for read-only image
+    ports:
+      - "7878:7878/tcp"
+    networks:
+      frontend:
+    restart: "always"
+
+volumes:
+  radarr.var:
+
+networks:
+  frontend:
