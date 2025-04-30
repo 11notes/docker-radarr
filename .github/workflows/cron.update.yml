@@ -53,13 +53,15 @@ jobs:
             if(latest.match(/\d+\.\d+\.\d+\.\d+/i) && latest !== `${repository.dot.semver.version}.${repository.dot.build.args.version_build}`){
               core.info(`found newer version ${latest}`);
               repository.dot.semver.version = latest.split('.').slice(0,3).join('.');
-              repository.dot.semver.latest = repository.dot.semver.version;
+              if(repository.dot.semver?.latest){
+                repository.dot.semver.latest = repository.dot.semver.version;
+              }
               repository.dot.build.args.version_build = latest.split('.')[3];
               if(repository.dot?.readme?.comparison?.image){
                 repository.dot.readme.comparison.image = repository.dot.readme.comparison.image.replace(current , repository.dot.semver.version);
               }
               try{
-                writeFileSync(resolve('.json'), JSON.stringify(repository.dot));
+                writeFileSync(resolve('.json'), JSON.stringify(repository.dot, null, 2));
                 core.exportVariable('WORKFLOW_AUTO_UPDATE', true);
               }catch(e){
                 core.setFailed(e);
