@@ -6,9 +6,10 @@ services:
     environment:
       TZ: "Europe/Zurich"
     volumes:
-      - "radarr.var:/radarr/var"
+      - "radarr.etc:/radarr/etc"
     tmpfs:
-      - "/tmp:uid=1000,gid=1000" # required for read-only image
+      # required for read-only image
+      - "/tmp:uid=1000,gid=1000"
     ports:
       - "7878:7878/tcp"
     networks:
@@ -16,7 +17,7 @@ services:
     restart: "always"
 
 volumes:
-  radarr.var:
+  radarr.etc:
 
 networks:
   frontend:
