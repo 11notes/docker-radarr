@@ -82,4 +82,3 @@ ARG APP_GID=1000
 
 # :: Start
   USER ${APP_UID}:${APP_GID}
-  ENTRYPOINT ["/sbin/tini", "--", "/usr/local/bin/entrypoint.sh"]
