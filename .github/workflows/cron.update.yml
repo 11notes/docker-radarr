@@ -75,6 +75,10 @@ jobs:
                 repository.dot.readme.comparison.image = repository.dot.readme.comparison.image.replace(current, repository.dot.semver.version);
               }
 
+              if(repository.dot?.build?.args?.version_build){
+                repository.dot.build.args.version_build = '${{ env.LATEST_VERSION }}'.split('.')[3];
+              }
+
               try{
                 writeFileSync(resolve('.json'), JSON.stringify(repository.dot, null, 2));
                 core.exportVariable('WORKFLOW_AUTO_UPDATE', true);
