@@ -1,7 +1,7 @@
 ![banner](https://github.com/11notes/defaults/blob/main/static/img/banner.png?raw=true)
 
 # RADARR
-[<img src="https://img.shields.io/badge/github-source-blue?logo=github&color=040308">](https://github.com/11notes/docker-RADARR)![5px](https://github.com/11notes/defaults/blob/main/static/img/transparent5x2px.png?raw=true)![size](https://img.shields.io/docker/image-size/11notes/radarr/5.22.4?color=0eb305)![5px](https://github.com/11notes/defaults/blob/main/static/img/transparent5x2px.png?raw=true)![version](https://img.shields.io/docker/v/11notes/radarr/5.22.4?color=eb7a09)![5px](https://github.com/11notes/defaults/blob/main/static/img/transparent5x2px.png?raw=true)![pulls](https://img.shields.io/docker/pulls/11notes/radarr?color=2b75d6)![5px](https://github.com/11notes/defaults/blob/main/static/img/transparent5x2px.png?raw=true)[<img src="https://img.shields.io/github/issues/11notes/docker-RADARR?color=7842f5">](https://github.com/11notes/docker-RADARR/issues)![5px](https://github.com/11notes/defaults/blob/main/static/img/transparent5x2px.png?raw=true)![swiss_made](https://img.shields.io/badge/Swiss_Made-FFFFFF?labelColor=FF0000&logo=data:image/svg%2bxml;base64,PHN2ZyB2ZXJzaW9uPSIxIiB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDMyIDMyIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Im0wIDBoMzJ2MzJoLTMyeiIgZmlsbD0iI2YwMCIvPjxwYXRoIGQ9Im0xMyA2aDZ2N2g3djZoLTd2N2gtNnYtN2gtN3YtNmg3eiIgZmlsbD0iI2ZmZiIvPjwvc3ZnPg==)
+[<img src="https://img.shields.io/badge/github-source-blue?logo=github&color=040308">](https://github.com/11notes/docker-RADARR)![5px](https://github.com/11notes/defaults/blob/main/static/img/transparent5x2px.png?raw=true)![size](https://img.shields.io/docker/image-size/11notes/radarr/5.23.3?color=0eb305)![5px](https://github.com/11notes/defaults/blob/main/static/img/transparent5x2px.png?raw=true)![version](https://img.shields.io/docker/v/11notes/radarr/5.23.3?color=eb7a09)![5px](https://github.com/11notes/defaults/blob/main/static/img/transparent5x2px.png?raw=true)![pulls](https://img.shields.io/docker/pulls/11notes/radarr?color=2b75d6)![5px](https://github.com/11notes/defaults/blob/main/static/img/transparent5x2px.png?raw=true)[<img src="https://img.shields.io/github/issues/11notes/docker-RADARR?color=7842f5">](https://github.com/11notes/docker-RADARR/issues)![5px](https://github.com/11notes/defaults/blob/main/static/img/transparent5x2px.png?raw=true)![swiss_made](https://img.shields.io/badge/Swiss_Made-FFFFFF?labelColor=FF0000&logo=data:image/svg%2bxml;base64,PHN2ZyB2ZXJzaW9uPSIxIiB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDMyIDMyIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Im0wIDBoMzJ2MzJoLTMyeiIgZmlsbD0iI2YwMCIvPjxwYXRoIGQ9Im0xMyA2aDZ2N2g3djZoLTd2N2gtNnYtN2gtN3YtNmg3eiIgZmlsbD0iI2ZmZiIvPjwvc3ZnPg==)
 
 Run Radarr smaller, lightweight and more secure
 
@@ -16,7 +16,7 @@ Run Radarr smaller, lightweight and more secure
 >* This image is created via a secure, pinned CI/CD process and immune to upstream attacks, most other images have upstream dependencies that can be exploited
 >* This image contains a proper health check that verifies the app is actually working, most other images have either no health check or only check if a port is open or ping works
 >* This image works as read-only, most other images need to write files to the image filesystem
->* This image has an auto update feature that will automatically build the latest version if released, most other image providers do this too slow
+>* This repository has an auto update feature that will automatically build the latest version if released, most other providers don't do this
 >* This image is smaller than most other images
 
 If you value security, simplicity and the ability to interact with the maintainer and developer of an image. Using my images is a great start in that direction.
@@ -24,7 +24,7 @@ If you value security, simplicity and the ability to interact with the maintaine
 # COMPARISON 🏁
 Below you find a comparison between this image and the most used or original one.
 
-| **image** | 11notes/radarr:5.22.4 | linuxserver/radarr:5.22.4 |
+| **image** | 11notes/radarr:5.23.3 | linuxserver/radarr:5.23.3 |
 | ---: | :---: | :---: |
 | **image size on disk** | 184MB | 207MB |
 | **process UID/GID** | 1000/1000 | 0/0 |
@@ -42,7 +42,7 @@ Below you find a comparison between this image and the most used or original one
 name: "arrs"
 services:
   radarr:
-    image: "11notes/radarr:5.22.4"
+    image: "11notes/radarr:5.23.3"
     read_only: true
     environment:
       TZ: "Europe/Zurich"
@@ -81,16 +81,18 @@ networks:
 # MAIN TAGS 🏷️
 These are the main tags for the image. There is also a tag for each commit and its shorthand sha256 value.
 
-* [5.22.4](https://hub.docker.com/r/11notes/radarr/tags?name=5.22.4)
+* [5.23.3](https://hub.docker.com/r/11notes/radarr/tags?name=5.23.3)
 
 ### There is no latest tag, what am I supposed to do about updates?
-It is of my opinion that the ```:latest``` tag is super dangerous. Many times, I’ve introduced **breaking** changes to my images. This would have messed up everything for some people. If you don’t want to change the tag to the latest [semver](https://semver.org/), simply use the short versions of [semver](https://semver.org/). Instead of using ```:5.22.4``` you can use ```:5``` or ```:5.22```. Since on each new version these tags are updated to the latest version of the software, using them is identical to using ```:latest``` but at least fixed to a major or minor version.
+It is of my opinion that the ```:latest``` tag is super dangerous. Many times, I’ve introduced **breaking** changes to my images. This would have messed up everything for some people. If you don’t want to change the tag to the latest [semver](https://semver.org/), simply use the short versions of [semver](https://semver.org/). Instead of using ```:5.23.3``` you can use ```:5``` or ```:5.23```. Since on each new version these tags are updated to the latest version of the software, using them is identical to using ```:latest``` but at least fixed to a major or minor version.
+
+If you still insist on having the bleeding edge release of this app, simply use the ```:rolling``` tag, but be warned! You will get the latest version of the app instantly, regardless of breaking changes or security issues or what so ever. You do this at your own risk!
 
 # REGISTRIES ☁️
 ```
-docker pull 11notes/radarr:5.22.4
-docker pull ghcr.io/11notes/radarr:5.22.4
-docker pull quay.io/11notes/radarr:5.22.4
+docker pull 11notes/radarr:5.23.3
+docker pull ghcr.io/11notes/radarr:5.23.3
+docker pull quay.io/11notes/radarr:5.23.3
 ```
 
 # SOURCE 💾
@@ -111,4 +113,4 @@ docker pull quay.io/11notes/radarr:5.22.4
 # ElevenNotes™️
 This image is provided to you at your own risk. Always make backups before updating an image to a different version. Check the [releases](https://github.com/11notes/docker-radarr/releases) for breaking changes. If you have any problems with using this image simply raise an [issue](https://github.com/11notes/docker-radarr/issues), thanks. If you have a question or inputs please create a new [discussion](https://github.com/11notes/docker-radarr/discussions) instead of an issue. You can find all my other repositories on [github](https://github.com/11notes?tab=repositories).
 
-*created 01.05.2025, 07:26:41 (CET)*
+*created 18.05.2025, 07:17:13 (CET)*
