@@ -1,7 +1,7 @@
 name: "arrs"
 services:
   radarr:
-    image: "11notes/radarr:5.26.2"
+    image: "11notes/radarr:5.27.5"
     read_only: true
     environment:
       TZ: "Europe/Zurich"
