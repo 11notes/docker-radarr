@@ -4,11 +4,11 @@
   "root": "/radarr",
   "build": {
     "args": {
-      "version_build": "10099"
+      "version_build": "10198"
     }
   },
   "semver": {
-    "version": "5.26.2"
+    "version": "5.27.5"
   },
   "readme": {
     "description": "Run Radarr smaller, lightweight and more secure",
@@ -19,7 +19,7 @@
       "radarr": "https://github.com/Radarr/Radarr"
     },
     "comparison": {
-      "image": "linuxserver/radarr:5.26.2"
+      "image": "linuxserver/radarr:5.27.5"
     }
   }
 }
