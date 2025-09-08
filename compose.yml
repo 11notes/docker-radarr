@@ -11,7 +11,7 @@ services:
       # required for read-only image
       - "/tmp:uid=1000,gid=1000"
     ports:
-      - "7878:7878/tcp"
+      - "3000:7878/tcp"
     networks:
       frontend:
     restart: "always"
