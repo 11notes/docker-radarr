@@ -1,61 +1,101 @@
-ARG APP_UID=1000
-ARG APP_GID=1000
+# ╔═════════════════════════════════════════════════════╗
+# ║                       SETUP                         ║
+# ╚═════════════════════════════════════════════════════╝
+# GLOBAL
+  ARG APP_UID=1000 \
+      APP_GID=1000 \
+      BUILD_DOT_NET_VERSION=9.0.304 \
+      BUILD_SRC=Radarr/Radarr.git \
+      BUILD_ROOT=/Radarr
 
-# :: Util
+# :: FOREIGN IMAGES
   FROM 11notes/util AS util
+  FROM 11notes/util:bin AS util-bin
+  FROM 11notes/distroless:localhealth AS distroless-localhealth
+  FROM 11notes/distroless:ds AS distroless-ds
 
-# :: Build
-  FROM alpine AS build
-  ARG TARGETARCH
-  ARG APP_VERSION
-  ARG APP_VERSION_BUILD
-  ENV BUILD_ROOT=/Radarr
-  ENV BUILD_BIN=${BUILD_ROOT}/Radarr
-  USER root
 
-  COPY --from=util /usr/local/bin/ /usr/local/bin
+# ╔═════════════════════════════════════════════════════╗
+# ║                       BUILD                         ║
+# ╚═════════════════════════════════════════════════════╝
+# :: PROWLARR
+  FROM 11notes/dotnetsdk:${BUILD_DOT_NET_VERSION} AS build
+  COPY --from=util-bin / /
+  COPY --from=distroless-ds / /
+  ARG TARGETARCH \
+      TARGETVARIANT \
+      APP_VERSION \
+      APP_VERSION_BUILD \
+      BUILD_SRC \
+      BUILD_ROOT \
+      BUILD_DOT_NET_VERSION
+  ENV PROWLARRVERSION=${APP_VERSION}.${APP_VERSION_BUILD}
+
+  RUN set -ex; \
+    eleven git clone ${BUILD_SRC} v${APP_VERSION}.${APP_VERSION_BUILD};
+
+  RUN set -ex; \
+    echo '{"sdk":{"version":"'${BUILD_DOT_NET_VERSION}'"}}' > ${BUILD_ROOT}/global.json; \
+    cat ${BUILD_ROOT}/global.json;
 
   RUN set -ex; \
     apk --update --no-cache add \
-      curl \
-      build-base \
-      upx; \
-    case "${TARGETARCH}" in \
-      "amd64") \
-        curl -SL https://github.com/Radarr/Radarr/releases/download/v${APP_VERSION}.${APP_VERSION_BUILD}/Radarr.master.${APP_VERSION}.${APP_VERSION_BUILD}.linux-musl-core-x64.tar.gz | tar -zxC /; \
-      ;; \
-      "arm64") \
-      curl -SL https://github.com/Radarr/Radarr/releases/download/v${APP_VERSION}.${APP_VERSION_BUILD}/Radarr.master.${APP_VERSION}.${APP_VERSION_BUILD}.linux-musl-core-arm64.tar.gz | tar -zxC /; \
-      ;; \
-    esac; \
-    eleven strip ${BUILD_BIN}; \
-    eleven strip ${BUILD_ROOT}/ffprobe; \
-    find ${BUILD_ROOT} -type f -name '*.so' -exec strip -v {} &> /dev/null ';'; \
-    mkdir -p /opt/radarr; \
-    cp -R ${BUILD_ROOT}/* /opt/radarr; \
-    rm -rf /opt/radarr/Radarr.Update;
+      yarn \
+      pnpm \
+      bash;
 
-# :: Header
+  RUN set -ex; \
+    cd ${BUILD_ROOT}; \
+    case "${TARGETARCH}${TARGETVARIANT}" in \
+      "amd64") export TARGETARCH="x64";; \
+      "armv7") export TARGETVARIANT="";; \
+    esac; \
+    ./build.sh \
+      --backend \
+      --frontend \
+      --packages \
+      -f net6.0 \
+      -r linux-musl-${TARGETARCH}${TARGETVARIANT};
+
+  RUN set -ex; \
+    mkdir -p /opt/radarr; \
+    rm -f ${BUILD_ROOT}/_output/net*/linux-musl-*/publish/ServiceUninstall.*; \
+    rm -f ${BUILD_ROOT}/_output/net*/linux-musl-*/publish/ServiceInstall.*; \
+    rm -f ${BUILD_ROOT}/_output/net*/linux-musl-*/publish/Radarr.Windows.*; \
+    cp -af ${BUILD_ROOT}/_output/net*/linux-musl-*/publish/. /opt/radarr; \
+    cp -af ${BUILD_ROOT}/_output/UI /opt/radarr;
+
+
+# ╔═════════════════════════════════════════════════════╗
+# ║                       IMAGE                         ║
+# ╚═════════════════════════════════════════════════════╝
+# :: HEADER
   FROM 11notes/alpine:stable
 
-  # :: arguments
-    ARG TARGETARCH
-    ARG APP_IMAGE
-    ARG APP_NAME
-    ARG APP_VERSION
-    ARG APP_ROOT
-    ARG APP_UID
-    ARG APP_GID
+  # :: default arguments
+    ARG TARGETPLATFORM \
+        TARGETOS \
+        TARGETARCH \
+        TARGETVARIANT \
+        APP_IMAGE \
+        APP_NAME \
+        APP_VERSION \
+        APP_ROOT \
+        APP_UID \
+        APP_GID \
+        APP_NO_CACHE
 
-  # :: environment
-    ENV APP_IMAGE=${APP_IMAGE}
-    ENV APP_NAME=${APP_NAME}
-    ENV APP_VERSION=${APP_VERSION}
-    ENV APP_ROOT=${APP_ROOT}
+  # :: default environment
+    ENV APP_IMAGE=${APP_IMAGE} \
+        APP_NAME=${APP_NAME} \
+        APP_VERSION=${APP_VERSION} \
+        APP_ROOT=${APP_ROOT}
 
   # :: multi-stage
-    COPY --from=util --chown=${APP_UID}:${APP_GID} /usr/local/bin/ /usr/local/bin
-    COPY --from=build --chown=${APP_UID}:${APP_GID} /opt/radarr /opt/radarr
+    COPY --from=distroless-localhealth / /
+    COPY --from=build /opt/radarr /opt/radarr
+    COPY --from=util / /
+    COPY ./rootfs /
 
 # :: Run
   USER root
@@ -68,17 +108,17 @@ ARG APP_GID=1000
       mkdir -p ${APP_ROOT}/etc;
 
   # :: copy filesystem changes and set correct permissions
-    COPY ./rootfs /
     RUN set -ex; \
       chmod +x -R /usr/local/bin; \
       chown -R ${APP_UID}:${APP_GID} \
         ${APP_ROOT};
 
-# :: Volumes
+# :: PERSISTENT DATA
   VOLUME ["${APP_ROOT}/etc"]
 
-# :: Monitor
-  HEALTHCHECK --interval=5s --timeout=2s CMD ["/usr/bin/curl", "-kILs", "--fail", "-o", "/dev/null", "http://localhost:7878/ping"]
+# :: MONITORING
+  HEALTHCHECK --interval=5s --timeout=2s --start-period=5s \
+    CMD ["/usr/local/bin/localhealth", "http://127.0.0.1:7878/ping"]
 
-# :: Start
+# :: EXECUTE
   USER ${APP_UID}:${APP_GID}
