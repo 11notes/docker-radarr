@@ -5,28 +5,37 @@
 
 Run Radarr smaller, lightweight and more secure
 
+# INTRODUCTION 📢
+
+Radarr is a movie collection manager for Usenet and BitTorrent users. It can monitor multiple RSS feeds for new movies and will interface with clients and indexers to grab, sort, and rename them. It can also be configured to automatically upgrade the quality of existing files in the library when a better quality format becomes available.
+
 # SYNOPSIS 📖
-**What can I do with this?** This image will give you a rootless and lightweight Radarr installation. Radarr is a PVR for Usenet and BitTorrent users. It can monitor multiple RSS feeds for new episodes of your favorite shows and will grab, sort and rename them. It can also be configured to automatically upgrade the quality of files already downloaded when a better quality format becomes available.
+**What can I do with this?** This image will give you a rootless and lightweight Radarr installation directly compiled from source.
 
 # UNIQUE VALUE PROPOSITION 💶
-**Why should I run this image and not the other image(s) that already exist?** Good question! All the other images on the market that do exactly the same don’t do or offer these options:
+**Why should I run this image and not the other image(s) that already exist?** Good question! Because ...
 
 > [!IMPORTANT]
->* This image runs as 1000:1000 by default, most other images run everything as root
->* This image is created via a secure, pinned CI/CD process and immune to upstream attacks, most other images have upstream dependencies that can be exploited
->* This image contains a proper health check that verifies the app is actually working, most other images have either no health check or only check if a port is open or ping works
->* This image works as read-only, most other images need to write files to the image filesystem
->* This repository has an auto update feature that will automatically build the latest version if released, most other providers don't do this
->* This image is smaller than most other images
+>* ... this image runs [rootless](https://github.com/11notes/RTFM/blob/main/linux/container/image/rootless.md) as 1000:1000
+>* ... this image is auto updated to the latest version via CI/CD
+>* ... this image is built and compiled from source
+>* ... this image has a health check
+>* ... this image runs read-only
+>* ... this image is automatically scanned for CVEs before and after publishing
+>* ... this image is created via a secure and pinned CI/CD process
+>* ... this image is very small
 
-If you value security, simplicity and the ability to interact with the maintainer and developer of an image. Using my images is a great start in that direction.
+If you value security, simplicity and optimizations to the extreme, then this image might be for you.
 
 # COMPARISON 🏁
 Below you find a comparison between this image and the most used or original one.
 
 | **image** | **size on disk** | **init default as** | **[distroless](https://github.com/11notes/RTFM/blob/main/linux/container/image/distroless.md)** | supported architectures
 | ---: | ---: | :---: | :---: | :---: |
-| linuxserver/radarr:5.27.5 | 207MB | 0:0 | ❌ | amd64, arm64 |
+| 11notes/radarr:5.27.5 | 186MB | 1000:1000 | ❌ | amd64, arm64 |
+| home-operations/radarr | 197MB | 65534:65533 | ❌ | amd64, arm64 |
+| linuxserver/radarr | 207MB | 0:0 | ❌ | amd64, arm64 |
+| hotio/radarr | 260MB | 0:0 | ❌ | amd64, arm64 |
 
 **Why is this image not distroless?** I would have loved to create a distroless, single binary image, sadly the way that Radarr is setup makes it really difficult to compile a static binary from source. Enabling AOT breaks almost 30% of used libraries because they are not setup to be statically linked (like Assembly.GetExecutingAssembly().Location). It’s also not fixable with a single PR. This is something the Radarr team would need to do.
 
@@ -48,7 +57,7 @@ services:
       # required for read-only image
       - "/tmp:uid=1000,gid=1000"
     ports:
-      - "7878:7878/tcp"
+      - "3000:7878/tcp"
     networks:
       frontend:
     restart: "always"
@@ -109,4 +118,4 @@ docker pull quay.io/11notes/radarr:5.27.5
 # ElevenNotes™️
 This image is provided to you at your own risk. Always make backups before updating an image to a different version. Check the [releases](https://github.com/11notes/docker-radarr/releases) for breaking changes. If you have any problems with using this image simply raise an [issue](https://github.com/11notes/docker-radarr/issues), thanks. If you have a question or inputs please create a new [discussion](https://github.com/11notes/docker-radarr/discussions) instead of an issue. You can find all my other repositories on [github](https://github.com/11notes?tab=repositories).
 
-*created 04.09.2025, 07:16:32 (CET)*
+*created 08.09.2025, 09:07:12 (CET)*
