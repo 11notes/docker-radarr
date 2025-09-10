@@ -1,4 +1,6 @@
-${{ content_synopsis }} This image will give you a rootless and lightweight Radarr installation directly compiled from source.
+${{ content_synopsis }} This image will give you a [rootless](https://github.com/11notes/RTFM/blob/main/linux/container/image/rootless.md) and lightweight Radarr installation for your adventures on the high seas *arrrr*!
+
+${{ content_arr_stack }}
 
 ${{ content_uvp }} Good question! Because ...
 
