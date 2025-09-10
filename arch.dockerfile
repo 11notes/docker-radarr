@@ -4,38 +4,37 @@
 # GLOBAL
   ARG APP_UID=1000 \
       APP_GID=1000 \
-      BUILD_DOT_NET_VERSION=9.0.304 \
+      BUILD_DOTNET_VERSION=9.0.304 \
       BUILD_SRC=Radarr/Radarr.git \
-      BUILD_ROOT=/Radarr
+      BUILD_ROOT=/Radarr \
+      OPT_ROOT=/opt/radarr
 
 # :: FOREIGN IMAGES
   FROM 11notes/util AS util
   FROM 11notes/util:bin AS util-bin
   FROM 11notes/distroless:localhealth AS distroless-localhealth
-  FROM 11notes/distroless:ds AS distroless-ds
 
 
 # ╔═════════════════════════════════════════════════════╗
 # ║                       BUILD                         ║
 # ╚═════════════════════════════════════════════════════╝
-# :: PROWLARR
-  FROM 11notes/dotnetsdk:${BUILD_DOT_NET_VERSION} AS build
+# :: RADARR
+  FROM 11notes/dotnetsdk:${BUILD_DOTNET_VERSION} AS build
   COPY --from=util-bin / /
-  COPY --from=distroless-ds / /
   ARG TARGETARCH \
       TARGETVARIANT \
       APP_VERSION \
       APP_VERSION_BUILD \
       BUILD_SRC \
       BUILD_ROOT \
-      BUILD_DOT_NET_VERSION
-  ENV PROWLARRVERSION=${APP_VERSION}.${APP_VERSION_BUILD}
+      BUILD_DOTNET_VERSION \
+      OPT_ROOT
 
   RUN set -ex; \
     eleven git clone ${BUILD_SRC} v${APP_VERSION}.${APP_VERSION_BUILD};
 
   RUN set -ex; \
-    echo '{"sdk":{"version":"'${BUILD_DOT_NET_VERSION}'"}}' > ${BUILD_ROOT}/global.json; \
+    echo '{"sdk":{"version":"'${BUILD_DOTNET_VERSION}'"}}' > ${BUILD_ROOT}/global.json; \
     cat ${BUILD_ROOT}/global.json;
 
   RUN set -ex; \
@@ -58,12 +57,12 @@
       -r linux-musl-${TARGETARCH}${TARGETVARIANT};
 
   RUN set -ex; \
-    mkdir -p /opt/radarr; \
+    mkdir -p ${OPT_ROOT}; \
     rm -f ${BUILD_ROOT}/_output/net*/linux-musl-*/publish/ServiceUninstall.*; \
     rm -f ${BUILD_ROOT}/_output/net*/linux-musl-*/publish/ServiceInstall.*; \
     rm -f ${BUILD_ROOT}/_output/net*/linux-musl-*/publish/Radarr.Windows.*; \
-    cp -af ${BUILD_ROOT}/_output/net*/linux-musl-*/publish/. /opt/radarr; \
-    cp -af ${BUILD_ROOT}/_output/UI /opt/radarr;
+    cp -af ${BUILD_ROOT}/_output/net*/linux-musl-*/publish/. ${OPT_ROOT}; \
+    cp -af ${BUILD_ROOT}/_output/UI ${OPT_ROOT};
 
 
 # ╔═════════════════════════════════════════════════════╗
@@ -83,7 +82,8 @@
         APP_ROOT \
         APP_UID \
         APP_GID \
-        APP_NO_CACHE
+        APP_NO_CACHE \
+        OPT_ROOT
 
   # :: default environment
     ENV APP_IMAGE=${APP_IMAGE} \
@@ -93,7 +93,7 @@
 
   # :: multi-stage
     COPY --from=distroless-localhealth / /
-    COPY --from=build /opt/radarr /opt/radarr
+    COPY --from=build ${OPT_ROOT} ${OPT_ROOT}
     COPY --from=util / /
     COPY ./rootfs /
 
@@ -111,6 +111,7 @@
     RUN set -ex; \
       chmod +x -R /usr/local/bin; \
       chown -R ${APP_UID}:${APP_GID} \
+        ${OPT_ROOT} \
         ${APP_ROOT};
 
 # :: PERSISTENT DATA
@@ -122,3 +123,4 @@
 
 # :: EXECUTE
   USER ${APP_UID}:${APP_GID}
+  ENTRYPOINT ["/usr/local/bin/tini", "--", "/usr/local/bin/entrypoint.sh"]
