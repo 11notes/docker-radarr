@@ -62,8 +62,7 @@
     rm -f ${BUILD_ROOT}/_output/net*/linux-musl-*/publish/ServiceInstall.*; \
     rm -f ${BUILD_ROOT}/_output/net*/linux-musl-*/publish/Radarr.Windows.*; \
     cp -af ${BUILD_ROOT}/_output/net*/linux-musl-*/publish/. ${OPT_ROOT}; \
-    cp -af ${BUILD_ROOT}/_output/UI ${OPT_ROOT}; \
-    ls -lah ${OPT_ROOT};
+    cp -af ${BUILD_ROOT}/_output/UI ${OPT_ROOT};
 
 
 # ╔═════════════════════════════════════════════════════╗
