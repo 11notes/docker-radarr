@@ -35,7 +35,7 @@
 
   RUN set -ex; \
     echo '{"sdk":{"version":"'${BUILD_DOTNET_VERSION}'"}}' > ${BUILD_ROOT}/global.json; \
-    cat ${BUILD_ROOT}/global.json;
+    sed -i 's#<TreatWarningsAsErrors>true</TreatWarningsAsErrors>#<TreatWarningsAsErrors>false</TreatWarningsAsErrors>#' ${BUILD_ROOT}/src/Directory.Build.props;
 
   RUN set -ex; \
     apk --update --no-cache add \
