@@ -19,7 +19,7 @@ This image is part of the so called arr-stack (apps to pirate and manage media c
 - [11notes/prowlarr](https://github.com/11notes/docker-prowlarr) - to manage all your indexers
 - [11notes/qbittorrent](https://github.com/11notes/docker-qbittorrent) - as your torrent client
 - [11notes/sabnzbd](https://github.com/11notes/docker-sabnzbd) - as your usenet client
-- [11notes/sonarr](https://github.com/11notes/docker-sonarr) - to manage your films
+- [11notes/sonarr](https://github.com/11notes/docker-sonarr) - to manage your TV shows
 
 # UNIQUE VALUE PROPOSITION 💶
 **Why should I run this image and not the other image(s) that already exist?** Good question! Because ...
@@ -140,4 +140,4 @@ This image supports unraid by default. Simply add **-unraid** to any tag and the
 # ElevenNotes™️
 This image is provided to you at your own risk. Always make backups before updating an image to a different version. Check the [releases](https://github.com/11notes/docker-radarr/releases) for breaking changes. If you have any problems with using this image simply raise an [issue](https://github.com/11notes/docker-radarr/issues), thanks. If you have a question or inputs please create a new [discussion](https://github.com/11notes/docker-radarr/discussions) instead of an issue. You can find all my other repositories on [github](https://github.com/11notes?tab=repositories).
 
-*created 11.09.2025, 11:24:34 (CET)*
+*created 11.09.2025, 15:24:45 (CET)*
