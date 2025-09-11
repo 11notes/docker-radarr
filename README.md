@@ -105,6 +105,7 @@ networks:
 These are the main tags for the image. There is also a tag for each commit and its shorthand sha256 value.
 
 * [5.27.5](https://hub.docker.com/r/11notes/radarr/tags?name=5.27.5)
+* [5.27.5-unraid](https://hub.docker.com/r/11notes/radarr/tags?name=5.27.5-unraid)
 
 ### There is no latest tag, what am I supposed to do about updates?
 It is of my opinion that the ```:latest``` tag is dangerous. Many times, I’ve introduced **breaking** changes to my images. This would have messed up everything for some people. If you don’t want to change the tag to the latest [semver](https://semver.org/), simply use the short versions of [semver](https://semver.org/). Instead of using ```:5.27.5``` you can use ```:5``` or ```:5.27```. Since on each new version these tags are updated to the latest version of the software, using them is identical to using ```:latest``` but at least fixed to a major or minor version.
@@ -117,6 +118,9 @@ docker pull 11notes/radarr:5.27.5
 docker pull ghcr.io/11notes/radarr:5.27.5
 docker pull quay.io/11notes/radarr:5.27.5
 ```
+
+# UNRAID VERSION 🟠
+This image supports unraid by default. Simply add **-unraid** to any tag and the image will run as 99:100 instead of 1000:1000 causing no issues on unraid. Enjoy.
 
 # SOURCE 💾
 * [11notes/radarr](https://github.com/11notes/docker-RADARR)
@@ -136,4 +140,4 @@ docker pull quay.io/11notes/radarr:5.27.5
 # ElevenNotes™️
 This image is provided to you at your own risk. Always make backups before updating an image to a different version. Check the [releases](https://github.com/11notes/docker-radarr/releases) for breaking changes. If you have any problems with using this image simply raise an [issue](https://github.com/11notes/docker-radarr/issues), thanks. If you have a question or inputs please create a new [discussion](https://github.com/11notes/docker-radarr/discussions) instead of an issue. You can find all my other repositories on [github](https://github.com/11notes?tab=repositories).
 
-*created 11.09.2025, 01:51:24 (CET)*
+*created 11.09.2025, 11:24:34 (CET)*
