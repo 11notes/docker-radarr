@@ -67,6 +67,12 @@
     cp -af ${BUILD_ROOT}/_output/net*/linux-musl-*/publish/. ${OPT_ROOT}; \
     cp -af ${BUILD_ROOT}/_output/UI ${OPT_ROOT};
 
+# :: FILE-SYSTEM
+  FROM alpine AS file-system
+  ARG APP_ROOT
+  RUN set -ex; \
+    mkdir -p /distroless${APP_ROOT}/etc;
+
 
 # ╔═════════════════════════════════════════════════════╗
 # ║                       IMAGE                         ║
@@ -95,10 +101,11 @@
         APP_ROOT=${APP_ROOT}
 
   # :: multi-stage
+    COPY --from=util / /
     COPY --from=distroless-localhealth / /
     COPY --from=build --chown=${APP_UID}:${APP_GID} ${OPT_ROOT} ${OPT_ROOT}
-    COPY --from=util / /
-    COPY --chown=${APP_UID}:${APP_GID} ./rootfs /
+    COPY --from=file-system --chown=${APP_UID}:${APP_GID} /distroless/ /
+    COPY ./rootfs /
 
 # :: Run
   USER root
