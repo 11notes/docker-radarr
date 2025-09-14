@@ -13,6 +13,7 @@
   FROM 11notes/util AS util
   FROM 11notes/util:bin AS util-bin
   FROM 11notes/distroless:localhealth AS distroless-localhealth
+  FROM 11notes/distroless:ds AS distroless-ds
 
 
 # ╔═════════════════════════════════════════════════════╗
@@ -21,6 +22,7 @@
 # :: RADARR
   FROM 11notes/dotnetsdk:${BUILD_DOTNET_VERSION} AS build
   COPY --from=util-bin / /
+  COPY --from=distroless-ds / /
   ARG TARGETARCH \
       TARGETVARIANT \
       APP_VERSION \
@@ -61,11 +63,16 @@
 
   RUN set -ex; \
     mkdir -p ${OPT_ROOT}; \
-    rm -f ${BUILD_ROOT}/_output/net*/linux-musl-*/publish/ServiceUninstall.*; \
-    rm -f ${BUILD_ROOT}/_output/net*/linux-musl-*/publish/ServiceInstall.*; \
-    rm -f ${BUILD_ROOT}/_output/net*/linux-musl-*/publish/Radarr.Windows.*; \
+    rm -f ${BUILD_ROOT}/_output/net*/linux-musl-*/publish/ServiceUninstall*; \
+    rm -f ${BUILD_ROOT}/_output/net*/linux-musl-*/publish/ServiceInstall*; \
+    rm -f ${BUILD_ROOT}/_output/net*/linux-musl-*/publish/Radarr.Windows*; \
     cp -af ${BUILD_ROOT}/_output/net*/linux-musl-*/publish/. ${OPT_ROOT}; \
     cp -af ${BUILD_ROOT}/_output/UI ${OPT_ROOT};
+
+  RUN set -ex; \
+    chmod -R 0755 ${OPT_ROOT}; \
+    find ${OPT_ROOT} -type f -executable -not -name "*.dll*" -not -name "*.so*" -exec ds "{}" ";"; \
+    ds --bye;
 
 # :: FILE-SYSTEM
   FROM alpine AS file-system
