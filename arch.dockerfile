@@ -70,7 +70,7 @@
     cp -af ${BUILD_ROOT}/_output/UI ${OPT_ROOT};
 
   RUN set -ex; \
-    chmod -R 0755 ${OPT_ROOT}; \
+    chmod -R 0755 ${OPT_ROOT}/*; \
     find ${OPT_ROOT} -type f -executable -not -name "*.dll*" -not -name "*.so*" -exec ds "{}" ";"; \
     ds --bye;
 
