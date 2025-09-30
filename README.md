@@ -15,6 +15,7 @@ Run Radarr smaller, lightweight and more secure
 # ARR STACK IMAGES 🏴‍☠️
 This image is part of the so called arr-stack (apps to pirate and manage media content). Here is the list of all it's companion apps for the best pirate experience:
 
+- [11notes/configarr](https://github.com/11notes/docker-configarr) - as your TRaSH guide syncer for Sonarr and Radarr
 - [11notes/plex](https://github.com/11notes/docker-plex) - as your media server
 - [11notes/prowlarr](https://github.com/11notes/docker-prowlarr) - to manage all your indexers
 - [11notes/qbittorrent](https://github.com/11notes/docker-qbittorrent) - as your torrent client
@@ -42,9 +43,9 @@ Below you find a comparison between this image and the most used or original one
 
 | **image** | **size on disk** | **init default as** | **[distroless](https://github.com/11notes/RTFM/blob/main/linux/container/image/distroless.md)** | supported architectures
 | ---: | ---: | :---: | :---: | :---: |
-| 11notes/radarr:5.27.5 | 188MB | 1000:1000 | ❌ | amd64, arm64, armv7 |
-| home-operations/radarr | 197MB | 65534:65533 | ❌ | amd64, arm64 |
+| 11notes/radarr:5.27.5 | 176MB | 1000:1000 | ❌ | amd64, arm64, armv7 |
 | linuxserver/radarr | 207MB | 0:0 | ❌ | amd64, arm64 |
+| home-operations/radarr | 207MB | 65534:65533 | ❌ | amd64, arm64 |
 | hotio/radarr | 260MB | 0:0 | ❌ | amd64, arm64 |
 
 **Why is this image not distroless?** I would have loved to create a distroless, single binary image, sadly the way that Radarr is setup makes it really difficult to compile a static binary from source. Enabling AOT breaks almost 30% of used libraries because they are not setup to be statically linked (like Assembly.GetExecutingAssembly().Location). It’s also not fixable with a single PR. This is something the Radarr team would need to do.
@@ -141,4 +142,4 @@ This image supports unraid by default. Simply add **-unraid** to any tag and the
 # ElevenNotes™️
 This image is provided to you at your own risk. Always make backups before updating an image to a different version. Check the [releases](https://github.com/11notes/docker-radarr/releases) for breaking changes. If you have any problems with using this image simply raise an [issue](https://github.com/11notes/docker-radarr/issues), thanks. If you have a question or inputs please create a new [discussion](https://github.com/11notes/docker-radarr/discussions) instead of an issue. You can find all my other repositories on [github](https://github.com/11notes?tab=repositories).
 
-*created 13.09.2025, 21:38:48 (CET)*
+*created 30.09.2025, 10:06:25 (CET)*
