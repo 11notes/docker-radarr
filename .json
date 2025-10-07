@@ -4,15 +4,15 @@
   "root": "/radarr",
   "build": {
     "args": {
-      "version_build": "10198"
+      "version_build": "10274"
     }
   },
   "semver": {
-    "version": "5.27.5"
+    "version": "5.28.0"
   },
   "readme": {
     "description": "Run Radarr smaller, lightweight and more secure",
-    "introduction":"[Radarr](https://github.com/Radarr/Radarr) (created by [Radarr](https://github.com/Radarr)) is a movie collection manager for Usenet and BitTorrent users. It can monitor multiple RSS feeds for new movies and will interface with clients and indexers to grab, sort, and rename them. It can also be configured to automatically upgrade the quality of existing files in the library when a better quality format becomes available.",
+    "introduction": "[Radarr](https://github.com/Radarr/Radarr) (created by [Radarr](https://github.com/Radarr)) is a movie collection manager for Usenet and BitTorrent users. It can monitor multiple RSS feeds for new movies and will interface with clients and indexers to grab, sort, and rename them. It can also be configured to automatically upgrade the quality of existing files in the library when a better quality format becomes available.",
     "parent": {
       "image": "11notes/alpine:stable"
     },
@@ -20,7 +20,11 @@
       "radarr": "https://github.com/Radarr/Radarr"
     },
     "comparison": {
-      "images": ["linuxserver/radarr", "ghcr.io/hotio/radarr", "ghcr.io/home-operations/radarr:rolling"]
+      "images": [
+        "linuxserver/radarr",
+        "ghcr.io/hotio/radarr",
+        "ghcr.io/home-operations/radarr:rolling"
+      ]
     }
   }
 }
