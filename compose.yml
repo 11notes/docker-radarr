@@ -9,7 +9,7 @@ x-lockdown: &lockdown
 
 services:
   radarr:
-    image: "11notes/radarr:5.27.5"
+    image: "11notes/radarr:5.28.0"
     <<: *lockdown
     environment:
       TZ: "Europe/Zurich"
