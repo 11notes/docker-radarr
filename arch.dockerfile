@@ -58,7 +58,7 @@
       --backend \
       --frontend \
       --packages \
-      -f net6.0 \
+      -f net8.0 \
       -r linux-musl-${TARGETARCH}${TARGETVARIANT};
 
   RUN set -ex; \
