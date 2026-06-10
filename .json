@@ -4,11 +4,11 @@
   "root": "/radarr",
   "build": {
     "args": {
-      "version_build": "10360"
+      "version_build": "10461"
     }
   },
   "semver": {
-    "version": "6.1.1"
+    "version": "6.2.1"
   },
   "readme": {
     "description": "run Radarr rootless",
