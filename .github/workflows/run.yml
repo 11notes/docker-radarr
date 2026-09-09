@@ -26,28 +26,28 @@ jobs:
 
     steps:
       - name: checkout all tags
-        uses: actions/checkout@85e6279cec87321a52edac9c87bce653a07cf6c2
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           ref: 'master'
           fetch-depth: 0
 
-      - name: get latest version and last tag
+      - name: get latest version and build
         run: |
-          LATEST_VERSION=$(curl -s https://api.github.com/repos/Radarr/Radarr/releases/latest | jq -r '.tag_name' | sed 's|v||')
-          if [ "${LATEST_VERSION}" != "null" ]; then
-            if ! curl -kILs --fail https://hub.docker.com/v2/repositories/11notes/radarr/tags/${LATEST_VERSION}; then
-              LATEST_BUILD=$(echo ${LATEST_VERSION} | awk -F "." '{print $NF}')
-              LATEST_TAG=$(git describe --abbrev=0 --tags `git rev-list --tags --max-count=1` | sed 's|v||')
-              echo "WORKFLOW_UPDATE_BASE64JSON=$(echo '{"version":"'${LATEST_VERSION}'","tag":"'${LATEST_TAG}'","build":"'${LATEST_BUILD}'", "unraid":true, "nobody":true}' | base64 -w 0)" >> "${GITHUB_ENV}"
-              echo "WORKFLOW_UPDATE=true" >> "${GITHUB_ENV}"
-            fi
-          fi
+          LATEST=$(curl -s https://api.github.com/repos/Radarr/Radarr/releases/latest | jq -r '.tag_name' | sed 's|v||')
+          echo "LATEST_VERSION=$(echo ${LATEST} | awk -F "." '{print $1"."$2"."$3}')" >> "${GITHUB_ENV}"
+          echo "LATEST_BUILD=$(echo ${LATEST} | awk -F "." '{print $NF}')" >> "${GITHUB_ENV}"
+
+      - name: check if updated is needed
+        uses: 11notes/actions/update@v1 # v1
+        with:
+          latest: ${{ env.LATEST_VERSION }}
+          build: ${{ env.LATEST_BUILD }}
 
       - name: call org.update
-        if: env.WORKFLOW_UPDATE == 'true'
-        uses: the-actions-org/workflow-dispatch@3133c5d135c7dbe4be4f9793872b6ef331b53bc7
+        if: env.ACTIONS_UPDATE == 'true'
+        uses: benc-uk/workflow-dispatch@7a027648b88c2413826b6ddd6c76114894dc5ec4 # v1.3.1
         with:
           wait-for-completion: false
           workflow: org.update.yml
           token: "${{ secrets.REPOSITORY_TOKEN }}"
-          inputs: '{ "etc":"${{ env.WORKFLOW_UPDATE_BASE64JSON }}" }'
+          inputs: '{ "etc":"${{ env.ACTIONS_UPDATE_BASE64JSON }}" }'

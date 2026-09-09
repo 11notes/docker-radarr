@@ -26,5 +26,7 @@
         "ghcr.io/home-operations/radarr:rolling"
       ]
     }
-  }
+  },
+  "unraid": true,
+  "nobody": true
 }

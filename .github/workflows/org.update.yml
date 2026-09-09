@@ -115,10 +115,11 @@ jobs:
                 }
 
                 // semver
-                const latest = semverExceptions(semver.valid(semver.coerce(job.inputs.version)));
-                const current = semverExceptions(semver.valid(semver.coerce(job.json.semver.version)));
+                const latest = semver.valid(semver.coerce(job.inputs.version));
+                const current = semver.valid(semver.coerce(job.json.semver.version));
                 const tag = semver.valid(semver.coerce(job.inputs.tag));
                 const checks = {latestTagExists:false};
+                const force = job.inputs?.force || false;
 
                 try{
                   const tag = await fetch(`https://hub.docker.com/v2/repositories/${job.json.image}/tags/${latest}`);
@@ -131,8 +132,11 @@ jobs:
                 }
 
                 // compare
-                if(latest && latest !== current && !checks.latestTagExists){
-                  core.info(`new ${semver.diff(current, latest)} release found (${latest}), updating ...`)
+                if(force || (latest && latest !== current && !checks.latestTagExists)){
+                  if(force){
+                    core.info('force update image');
+                  }
+                  core.info(`new ${semver.diff(current, latest)} release found (${latest}), updating ...`);
                   job.json.semver.version = latest;
 
                   // check if app has additional parameters
@@ -141,10 +145,9 @@ jobs:
                     build.args = {
                       version_build:job.inputs.build,
                     };
-                    job.json.build.args.version_build = job.inputs.build;
+                    job.json.build = job.inputs.build;
                   }else if(job.inputs?.build?.args){
-                    build.args = job.inputs.build.args;
-                    job.json.build.args.version_build = job.inputs.build.args;
+                    job.json.build.args = job.inputs.build.args;
                   }
 
                   // update .json
@@ -197,13 +200,15 @@ jobs:
       - name: update / build container image
         id: build
         if: env.WORKFLOW_UPDATE == 'true' && steps.checkout.outcome == 'success'
-        uses: benc-uk/workflow-dispatch@7a027648b88c2413826b6ddd6c76114894dc5ec4 #v1.3.1
+        uses: benc-uk/workflow-dispatch@31e2b3319479a63f0ab15bf800eff9e913504e26 #v1.3.2
         with:
           workflow: org.container.yml
           wait-for-completion: true
           token: "${{ secrets.REPOSITORY_TOKEN }}"
           inputs: '{ "release":"${{ github.event.inputs.release }}", "readme":"${{ github.event.inputs.readme }}", "run-name":"update v${{ env.LATEST_VERSION }}", "etc":"${{ env.WORKFLOW_UPDATE_BASE64JSON }}" }'
           ref: "v${{ env.LATEST_TAG }}"
+          sync-status: true
+          wait-interval-seconds: 30
 
       - name: "update / revert if build failed"
         if: env.WORKFLOW_UPDATE == 'true' && failure()
@@ -213,8 +218,8 @@ jobs:
           git push --delete origin v${{ env.LATEST_TAG }}
 
       - name: update / build container image for unraid
-        if: env.WORKFLOW_UPDATE_UNRAID == 'true' && steps.build.outputs.workflow-conclusion == 'success'
-        uses: benc-uk/workflow-dispatch@7a027648b88c2413826b6ddd6c76114894dc5ec4 #v1.3.1
+        if: env.WORKFLOW_UPDATE_UNRAID == 'true' && steps.build.conclusion == 'success'
+        uses: benc-uk/workflow-dispatch@31e2b3319479a63f0ab15bf800eff9e913504e26 #v1.3.2
         with:
           workflow: org.container.yml
           wait-for-completion: false
@@ -223,8 +228,8 @@ jobs:
           ref: "v${{ env.LATEST_TAG }}"
 
       - name: update / build container image for nobody
-        if: env.WORKFLOW_UPDATE_NOBODY == 'true' && steps.build.outputs.workflow-conclusion == 'success'
-        uses: benc-uk/workflow-dispatch@7a027648b88c2413826b6ddd6c76114894dc5ec4 #v1.3.1
+        if: env.WORKFLOW_UPDATE_NOBODY == 'true' && steps.build.conclusion == 'success'
+        uses: benc-uk/workflow-dispatch@31e2b3319479a63f0ab15bf800eff9e913504e26 #v1.3.2
         with:
           workflow: org.container.yml
           wait-for-completion: false
