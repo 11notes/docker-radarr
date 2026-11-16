@@ -2,9 +2,9 @@
   "image": "11notes/radarr",
   "name": "radarr",
   "root": "/radarr",
-  "build": "10685",
+  "build": "10918",
   "semver": {
-    "version": "6.4.4"
+    "version": "7.0.3"
   },
   "readme": {
     "description": "run Radarr rootless",
