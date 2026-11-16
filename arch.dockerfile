@@ -4,7 +4,7 @@
 # GLOBAL
   ARG APP_UID=1000 \
       APP_GID=1000 \
-      BUILD_DOTNET_VERSION=9.0.304 \
+      APP_DOTNET10_VERSION=0.0.0 \
       BUILD_SRC=Radarr/Radarr.git \
       BUILD_ROOT=/Radarr \
       OPT_ROOT=/opt/radarr
@@ -20,7 +20,7 @@
 # ║                       BUILD                         ║
 # ╚═════════════════════════════════════════════════════╝
 # :: RADARR
-  FROM 11notes/dotnetsdk:${BUILD_DOTNET_VERSION} AS build
+  FROM 11notes/dotnetsdk:${APP_DOTNET10_VERSION} AS build
   COPY --from=util-bin / /
   COPY --from=distroless-ds / /
   ARG TARGETARCH \
@@ -29,7 +29,7 @@
       APP_VERSION_BUILD \
       BUILD_SRC \
       BUILD_ROOT \
-      BUILD_DOTNET_VERSION \
+      APP_DOTNET10_VERSION \
       OPT_ROOT
 
   ENV RADARRVERSION=${APP_VERSION}.${APP_VERSION_BUILD} \
@@ -39,7 +39,7 @@
     eleven git clone ${BUILD_SRC} v${APP_VERSION}.${APP_VERSION_BUILD};
 
   RUN set -ex; \
-    echo '{"sdk":{"version":"'${BUILD_DOTNET_VERSION}'"}}' > ${BUILD_ROOT}/global.json; \
+    echo '{"sdk":{"version":"'${APP_DOTNET10_VERSION}'"}}' > ${BUILD_ROOT}/global.json; \
     sed -i 's#<TreatWarningsAsErrors>true</TreatWarningsAsErrors>#<TreatWarningsAsErrors>false</TreatWarningsAsErrors>#' ${BUILD_ROOT}/src/Directory.Build.props;
 
   RUN set -ex; \
@@ -58,7 +58,7 @@
       --backend \
       --frontend \
       --packages \
-      -f net8.0 \
+      -f net10.0 \
       -r linux-musl-${TARGETARCH}${TARGETVARIANT};
 
   RUN set -ex; \
